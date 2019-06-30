@@ -1,16 +1,18 @@
 package com.mgdiez.coroutinesworkshop.presentation.detail
 
+import com.mgdiez.coroutinesworkshop.domain.Failure
+import com.mgdiez.coroutinesworkshop.domain.model.CharacterBo
 import com.mgdiez.coroutinesworkshop.domain.usecase.GetCharacter
+import com.mgdiez.coroutinesworkshop.presentation.BasePresenter
 import com.mgdiez.coroutinesworkshop.presentation.mapper.CharactersViewModelMapper
-import io.reactivex.disposables.CompositeDisposable
+import kotlinx.coroutines.cancel
 
 class CharacterDetailPresenter(
     private val getCharacter: GetCharacter,
     private val mapper: CharactersViewModelMapper
-) : CharacterDetailContract.Presenter {
+) : BasePresenter(), CharacterDetailContract.Presenter {
 
     private var view: CharacterDetailContract.View? = null
-    private val compositeDisposable: CompositeDisposable = CompositeDisposable()
 
     override fun onViewReady(
         view: CharacterDetailContract.View,
@@ -18,16 +20,25 @@ class CharacterDetailPresenter(
     ) {
         this.view = view
 
-        val disposable = getCharacter.execute(
-            { view.showCharacter(mapper.transform(it)) },
-            { view.finish() }, id
-        )
+        getCharacter.invoke(this, GetCharacter.Params(id)) {
+            it.either(::handleError, ::handleSuccess)
+        }
+    }
 
-        compositeDisposable.add(disposable)
+    private fun handleSuccess(characterBo: CharacterBo) {
+        view?.showCharacter(mapper.transform(characterBo))
+    }
+
+    private fun handleError(failure: Failure) {
+        view?.finish()
     }
 
     override fun onDestroy() {
         view = null
-        compositeDisposable.clear()
+        coroutineContext.cancel()
+    }
+
+    override fun onGenericError(throwable: Throwable) {
+        view?.finish()
     }
 }

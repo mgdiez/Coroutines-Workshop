@@ -10,11 +10,7 @@ interface CharacterDetailContract {
     }
 
     interface Presenter {
-        fun onViewReady(
-            view: View,
-            id: Int
-        )
-
+        fun onViewReady(view: View, id: Int)
         fun onDestroy()
     }
 }

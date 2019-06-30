@@ -5,18 +5,16 @@ import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
 import com.mgdiez.coroutinesworkshop.data.local.entity.CharacterEntity
-import io.reactivex.Completable
-import io.reactivex.Single
 
 @Dao
 abstract class CharactersDatabaseDao {
 
     @Query(GET_CHARACTERS_BY_PAGE)
-    internal abstract fun getCharacters(page: Int): Single<List<CharacterEntity>>
+    internal abstract suspend fun getCharacters(page: Int): List<CharacterEntity>
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    internal abstract fun saveCharacters(characters: List<CharacterEntity>): Completable
+    internal abstract suspend fun saveCharacters(characters: List<CharacterEntity>)
 
     @Query(GET_CHARACTER_BY_ID)
-    internal abstract fun getCharacterById(id: Int): Single<CharacterEntity>
+    internal abstract suspend fun getCharacterById(id: Int): CharacterEntity
 }

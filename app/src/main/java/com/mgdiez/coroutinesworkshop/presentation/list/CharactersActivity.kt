@@ -5,9 +5,9 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.mgdiez.coroutinesworkshop.R
-import com.mgdiez.coroutinesworkshop.presentation.model.CharacterViewModel
 import com.mgdiez.coroutinesworkshop.presentation.extensions.gone
 import com.mgdiez.coroutinesworkshop.presentation.extensions.visible
+import com.mgdiez.coroutinesworkshop.presentation.model.CharacterViewModel
 import com.mgdiez.coroutinesworkshop.presentation.navigator.Navigator
 import kotlinx.android.synthetic.main.activity_main.*
 import org.koin.android.ext.android.inject

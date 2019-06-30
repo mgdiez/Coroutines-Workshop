@@ -5,8 +5,8 @@ import com.mgdiez.coroutinesworkshop.data.local.database.CharactersDatabase
 import com.mgdiez.coroutinesworkshop.data.local.database.CharactersDatabaseDao
 import com.mgdiez.coroutinesworkshop.data.local.entity.CharactersEntityMapper
 import com.mgdiez.coroutinesworkshop.domain.model.CharacterBo
-import io.reactivex.Completable
-import io.reactivex.Single
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
 
 class CharactersLocalDataSource(
     private val charactersDatabase: CharactersDatabase,
@@ -17,12 +17,14 @@ class CharactersLocalDataSource(
         charactersDatabase.charactersDatabaseDao()
     }
 
-    override fun getCharacters(page: Int): Single<List<CharacterBo>> =
-        charactersDao.getCharacters(page).map { charactersEntityMapper.toBo(it) }
+    override suspend fun getCharacters(page: Int): List<CharacterBo> =
+        charactersEntityMapper.toBo(charactersDao.getCharacters(page))
 
-    override fun getCharacterById(id: Int): Single<CharacterBo> =
-        charactersDao.getCharacterById(id).map { charactersEntityMapper.toBo(it) }
+    override suspend fun getCharacterById(id: Int): CharacterBo =
+        charactersEntityMapper.toBo(charactersDao.getCharacterById(id))
 
-    override fun saveCharacters(characters: List<CharacterBo>, page: Int): Completable =
-        charactersDao.saveCharacters(charactersEntityMapper.toEntity(characters, page))
+    override suspend fun saveCharacters(characters: List<CharacterBo>, page: Int) =
+        withContext(Dispatchers.IO) {
+            charactersDao.saveCharacters(charactersEntityMapper.toEntity(characters, page))
+        }
 }

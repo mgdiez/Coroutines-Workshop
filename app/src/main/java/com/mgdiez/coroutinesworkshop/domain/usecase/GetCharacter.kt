@@ -1,26 +1,23 @@
 package com.mgdiez.coroutinesworkshop.domain.usecase
 
-import com.mgdiez.coroutinesworkshop.domain.repository.CharactersRepository
+import com.mgdiez.coroutinesworkshop.domain.BaseUseCase
+import com.mgdiez.coroutinesworkshop.domain.Either
+import com.mgdiez.coroutinesworkshop.domain.Failure
 import com.mgdiez.coroutinesworkshop.domain.model.CharacterBo
-import io.reactivex.Scheduler
-import io.reactivex.disposables.Disposable
+import com.mgdiez.coroutinesworkshop.domain.repository.CharactersRepository
 
 class GetCharacter(
-    private val subscribeOn: Scheduler,
-    private val observeOn: Scheduler,
     private val charactersRepository: CharactersRepository
-) {
+) : BaseUseCase<CharacterBo, GetCharacter.Params>() {
 
-    fun execute(
-        onSuccess: (CharacterBo) -> Unit,
-        onError: (Throwable) -> Unit,
-        id: Int
-    ): Disposable = charactersRepository
-        .getCharacter(id)
-        .subscribeOn(subscribeOn)
-        .observeOn(observeOn)
-        .subscribe(
-            onSuccess,
-            onError
-        )
+    override suspend fun run(params: Params): Either<Failure, CharacterBo> {
+        return try {
+            val character = charactersRepository.getCharacter(params.id)
+            Either.Right(character)
+        } catch (exp: Exception) {
+            Either.Left(Failure.Error(exp))
+        }
+    }
+
+    data class Params(val id: Int)
 }
