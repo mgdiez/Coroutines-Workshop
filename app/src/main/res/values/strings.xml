@@ -1,0 +1,16 @@
+<resources>
+    <string name="app_name">Coroutines Workshop</string>
+    <string name="retry">Retry</string>
+    <string name="name">Name: </string>
+    <string name="status">Status: </string>
+    <string name="last_location_known">Location: </string>
+    <string name="gender">Gender: </string>
+    <string name="origin">Origin: </string>
+    <string name="male_symbol">♀</string>
+    <string name="female_symbol">♂</string>
+    <string name="genderless_symbol">⚧</string>
+    <string name="unknown_symbol">\???</string>
+    <string name="alive_symbol">❤</string>
+    <string name="dead_symbol">†</string>
+    <string name="specie">Specie: </string>
+</resources>
