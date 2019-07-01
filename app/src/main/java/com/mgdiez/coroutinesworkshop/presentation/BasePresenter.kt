@@ -9,7 +9,7 @@ import kotlin.coroutines.CoroutineContext
 abstract class BasePresenter : CoroutineScope {
 
     private val handler = CoroutineExceptionHandler { _, throwable -> onGenericError(throwable) }
-    internal val job = Job()
+    private val job = Job()
     override val coroutineContext: CoroutineContext = job + handler + Dispatchers.Main
 
     abstract fun onGenericError(throwable: Throwable)
