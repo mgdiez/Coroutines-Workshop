@@ -13,11 +13,11 @@ class CharactersRepository(
     fun getCharacters(page: Int): Single<List<CharacterBo>> =
         Single.concat(
             charactersLocalDataSource.getCharacters(page),
-            charactersDataSource.getCharacters(page).doOnSuccess {
+            charactersDataSource.getCharacters(page).flatMap {
                 charactersLocalDataSource.saveCharacters(
                     it,
                     page
-                ).subscribe()
+                ).onErrorComplete().andThen(Single.just(it))
             }
         ).filter { it.isNotEmpty() }.firstOrError()
 
